@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <link rel="stylesheet" href="./tailwind.css">
+</head>
+<body class="w-full h-screen flex flex-col items-center justify-center gap-8 md:gap-16">
+    <p>Sipak's (<a class="text-sky-600" href="https://t.me/sipAK_OP" target="_blank" rel="noopener noreferrer">Who?</a>) PP size is - <span class="font-mono" id="pp_size">...</span></p>
+    <div class="flex flex-row gap-4 md:gap-8">
+        <input class="p-3 border border-black rounded" type="number">
+        <button class="hover:underline" onclick="setPPsize(document.getElementsByTagName('input')[0].value);">Update size</button>
+    </div>
+    <div class="flex flex-col gap-3 md:gap-6 p-3 justify-start">
+        <span class="font-mono">It takes around 30 seconds to update values on the blockchain, please be patient.</span>
+        <a class="hover:text-blue-600 transition-all" href="https://faucet.egorfine.com/" target="_blank" rel="noopener noreferrer">Get free RopstenETH from faucet.</a>
+        <a class="hover:text-blue-600 transition-all" href="https://ropsten.etherscan.io/address/0xd18f80ecfb68898bbd1446d6dc11d1d31fbf189f" target="_blank" rel="noopener noreferrer">View transactions on Etherscan.io</a>
+    </div>
+    <script>
+        const contractAddress = '0xD18f80ecfB68898BBD1446D6DC11d1D31fbF189f';
+        const contractABI = [{"inputs":[],"name":"getPPsize","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_pp_size","type":"uint256"}],"name":"setPPsize","outputs":[],"stateMutability":"nonpayable","type":"function"}];
+        let contract;
+        let signer;
+        (async () => {
+            if (!window.ethereum) {
+                return alert('Please install Metamask.');
+            }
+            const provider = new ethers.providers.Web3Provider(window.ethereum, "ropsten");
+            provider.send("eth_requestAccounts", []).then(() => {
+                provider.listAccounts().then(async (accounts) => {
+                    signer = provider.getSigner(accounts[0]);
+                    contract = new ethers.Contract(
+                        contractAddress,
+                        contractABI,
+                        signer,
+                    );
+                    document.getElementsByTagName('span')[0].innerText = await getPPsize()
+                });
+            });
+            async function getPPsize() {
+                return await contract.getPPsize();
+            }
+            window.setPPsize = async function setPPsize(_size) {
+                await contract.setPPsize(Number(_size));
+                document.getElementsByTagName('span')[0].innerText = await getPPsize();
+            }
+        })();
+    </script>
+</body>
+</html>
