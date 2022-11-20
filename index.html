@@ -34,7 +34,6 @@
                 return alert('Please install Metamask.');
             }
             const provider = new ethers.providers.Web3Provider(window.ethereum, "goerli");
-            // const provider = new ethers.providers.JsonRpcProvider('https://clean-evocative-dawn.ethereum-goerli.discover.quiknode.pro/');
             provider.send("eth_requestAccounts", []).then(() => {
                 provider.listAccounts().then(async (accounts) => {
                     signer = provider.getSigner(accounts[0]);
