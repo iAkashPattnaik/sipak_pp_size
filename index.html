@@ -21,7 +21,7 @@
     <div class="flex flex-col gap-3 md:gap-6 p-3 justify-center items-center">
         <span class="font-mono">It takes around 30 seconds to update values on the blockchain, please be patient.</span>
         <a class="hover:text-blue-600 transition-all" href="https://goerlifaucet.com/" target="_blank" rel="noopener noreferrer">Get free GoerliETH from faucet.</a>
-        <a class="hover:text-blue-600 transition-all" href="https://ropsten.etherscan.io/address/0x951263B1B9E8ddBC7ebdCb2e365cA8A714832054" target="_blank" rel="noopener noreferrer">View transactions on Etherscan.io</a>
+        <a class="hover:text-blue-600 transition-all" href="https://goerli.etherscan.io/address/0x951263B1B9E8ddBC7ebdCb2e365cA8A714832054" target="_blank" rel="noopener noreferrer">View transactions on Etherscan.io</a>
     </div>
     <script>
         const contractAddress = '0x951263B1B9E8ddBC7ebdCb2e365cA8A714832054';
@@ -47,13 +47,13 @@
                 });
             });
             async function getPPsize() {
-                await contract.getPPsize();
                 const x = new ethers.providers.JsonRpcProvider("https://clean-evocative-dawn.ethereum-goerli.discover.quiknode.pro/d77ee44bd62f6514f3600c6c6013cb998285a12a/");
                 const balance = await x.getBalance(
                     user,
                     "latest"
                 );
                 document.getElementById('eth_balance').innerText = ethers.utils.formatEther(balance);
+                return await contract.getPPsize();
             }
             window.setPPsize = async function setPPsize(_size) {
                 await contract.setPPsize(Number(_size));
